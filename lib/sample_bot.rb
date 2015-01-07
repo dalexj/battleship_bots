@@ -1,5 +1,3 @@
-require_relative 'shot'
-
 class SampleBot
   def place_ships(map_generator)
     map_generator.place_battleship row: 1, col: 0, direction: :down
@@ -14,6 +12,6 @@ class SampleBot
     until board[row][col] == Map::EMPTY_MARK
       row, col = rand(10), rand(10)
     end
-    Shot.new row, col
+    [row, col]
   end
 end

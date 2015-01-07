@@ -1,6 +1,6 @@
 class Shot
-  def initialize(row, col)
-    @row, @col = row, col
+  def initialize(coords)
+    @row, @col = coords
   end
 
   def to_coords

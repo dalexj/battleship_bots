@@ -34,7 +34,7 @@ class Map
     ships.flat_map(&:coords)
   end
 
-  def lol
+  def mark_with_ships
     ships_coords.each do |row, col|
       board[row][col] = SHIP_MARK
     end

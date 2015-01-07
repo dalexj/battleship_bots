@@ -15,7 +15,7 @@ class GUI < Gosu::Window
 
   def update
     @count += 1
-    if (@count % 100).zero?
+    if (@count % 10).zero?
       @engine.take_turn unless @engine.game_over?
       @count += 0
     end
@@ -53,5 +53,5 @@ engine = BattleshipEngine.new(SampleBot, SampleBot)
 engine.start_game
 engine.print_boards_with_ship_locs
 engine.take_turn
-# engine.print_boards
+engine.print_boards
 engine.play_fully
