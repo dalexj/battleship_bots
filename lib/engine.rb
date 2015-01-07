@@ -1,9 +1,11 @@
-require_relative 'base_bot'
+require_relative 'map_generator'
 require_relative 'map'
 require_relative 'sample_bot'
 require_relative 'ship'
+require_relative 'shot'
 
 class BattleshipEngine
+  attr_reader :map_1, :map_2
   def initialize(bot_class_1, bot_class_2)
     @bot_1 = bot_class_1.new
     @map_1 = Map.new(10)
@@ -16,12 +18,19 @@ class BattleshipEngine
   end
 
   def play_fully
-    until @map_1.lost? || @map_2.lost?
+    until game_over?
       take_turn
+      system("clear")
+      print_boards
+      sleep(0.1)
     end
     puts "Player 1 is the winner" if @map_2.lost?
     puts "Player 2 is the winner" if @map_1.lost?
     print_boards
+  end
+
+  def game_over?
+    @map_1.lost? || @map_2.lost?
   end
 
   def take_turn
@@ -58,24 +67,22 @@ class BattleshipEngine
   end
 
   def place_ships(bot, map)
-    bot.place_ships
-    map.place_ship(   bot.carrier.merge( size: 5 ))
-    map.place_ship(bot.battleship.merge( size: 4 ))
-    map.place_ship(   bot.cruiser.merge( size: 3 ))
-    map.place_ship( bot.submarine.merge( size: 3 ))
-    map.place_ship( bot.destroyer.merge( size: 2 ))
+    generator = MapGenerator.new
+    bot.place_ships(generator)
+    map.place_ship(   generator.carrier.merge( size: 5 ))
+    map.place_ship(generator.battleship.merge( size: 4 ))
+    map.place_ship(   generator.cruiser.merge( size: 3 ))
+    map.place_ship( generator.submarine.merge( size: 3 ))
+    map.place_ship( generator.destroyer.merge( size: 2 ))
   end
 
   def one_turn(bot, map)
-    bot.take_turn(map.dup_board)
-    raise "You never guessed" unless bot.guess
-    if bot.guess.is_a? Array
-      map.guess(*bot.guess)
-    elsif bot.guess.is_a? String
-      map.guess_with_string(bot.guess)
+    shot = bot.take_turn(map.dup_board)
+    raise "You never guessed" unless shot
+    if shot.is_a? Shot
+      map.fire! shot
     else
       raise "Invalid guess format"
     end
-    bot.reset
   end
 end

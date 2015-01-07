@@ -3,7 +3,7 @@ require_relative 'ship'
 class Map
   EMPTY_MARK = "."
   HIT_MARK   = "X"
-  MISS_MARK  = "M"
+  MISS_MARK  = "m"
   SHIP_MARK  = "S"
   attr_accessor :board_size, :board, :ships
 
@@ -21,7 +21,8 @@ class Map
     header + body
   end
 
-  def place_ship(size: , row: , col: , direction: )
+  def place_ship(options)
+    size,row,col,direction = options[:size] , options[:row] , options[:col] , options[:direction]
     raise "direction must be :down or :across" unless [:down, :across].include? direction
     raise "row or col out of bounds" unless [row, col].all? { |num| (0..board_size-size).include? num }
     new_ship = Ship.new(size , row , col , direction)
@@ -39,15 +40,20 @@ class Map
     end
   end
 
-  def guess(row, col)
-    raise "Guess not in bounds" unless [row, col].all? { |num| (0...board_size).include?(num) }
-    raise "You can't guess a spot you already have" unless board[row][col] == EMPTY_MARK
-    board[row][col] = ships_coords.include?([row, col]) ? HIT_MARK : MISS_MARK
+  def fire!(shot)
+    raise "Guess not in bounds" unless shot.in_bounds?(board_size)
+    raise "You can't guess a spot you already have" unless mark_at(shot) == EMPTY_MARK
+    mark shot, ships_coords.include?(shot.to_coords) ? HIT_MARK : MISS_MARK
   end
 
-  def guess_with_string(coords) # B4
-    raise "Invalid format for guess, must be like 'A5'" unless coords =~ /\A[a-z]\d\z/i
-    guess(coords[0].upcase.ord - 65, coords[1].to_i - 1)
+  def mark_at(shot)
+    row, col = shot.to_coords
+    board[row][col]
+  end
+
+  def mark(shot, mark)
+    row, col = shot.to_coords
+    board[row][col] = mark
   end
 
   def lost?
