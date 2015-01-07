@@ -4,6 +4,7 @@ class Map
   EMPTY_MARK = "."
   HIT_MARK   = "X"
   MISS_MARK  = "M"
+  SHIP_MARK  = "S"
   attr_accessor :board_size, :board, :ships
 
   def initialize(board_size)
@@ -34,7 +35,7 @@ class Map
 
   def lol
     ships_coords.each do |row, col|
-      board[row][col] = HIT_MARK
+      board[row][col] = SHIP_MARK
     end
   end
 
@@ -49,6 +50,10 @@ class Map
     guess(coords[0].upcase.ord - 65, coords[1].to_i - 1)
   end
 
+  def lost?
+    ships_coords.all? { |row, col| board[row][col] == HIT_MARK }
+  end
+
   private
   def header
     ". " + (1..board_size).to_a.join(" ") + "\n"
@@ -58,22 +63,3 @@ class Map
     board.map.with_index { |row, index| (index + 65).chr + " " + row.join(" ") }.join("\n")
   end
 end
-
-map = Map.new(10)
-map.place_ship(size: 8, direction: :across, row: 0, col: 0)
-map.place_ship(size: 4, direction: :down, row: 5, col: 5)
-map.place_ship(size: 2, direction: :across, row: 3, col: 6)
-
-map.guess_with_string "B4"
-map.guess_with_string "C7"
-map.guess_with_string "D7"
-map.guess_with_string "D8"
-
-
-puts map
-
-# ~> RuntimeError
-# ~> row or col out of bounds
-# ~>
-# ~> /Users/alex/turing/projects/dsa_battleship/lib/map.rb:25:in `place_ship'
-# ~> /Users/alex/turing/projects/dsa_battleship/lib/map.rb:66:in `<main>'
