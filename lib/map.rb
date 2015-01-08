@@ -23,9 +23,8 @@ class Map
 
   def place_ship(options)
     size,row,col,direction = options[:size] , options[:row] , options[:col] , options[:direction]
-    raise "direction must be :down or :across" unless [:down, :across].include? direction
-    raise "row or col out of bounds" unless [row, col].all? { |num| (0..board_size-size).include? num }
     new_ship = Ship.new(size , row , col , direction)
+    new_ship.validate!(board_size)
     raise "You cannot overlap ships" if (ships_coords & new_ship.coords).any?
     ships << new_ship
   end

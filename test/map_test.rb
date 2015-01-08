@@ -1,8 +1,5 @@
 require 'minitest/autorun'
 require 'minitest/pride'
-require './lib/ship'
-require './lib/evaluator'
-require './lib/printer'
 require './lib/map'
 
 class MapTest < MiniTest::Test
