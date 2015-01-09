@@ -1,4 +1,5 @@
 require_relative 'lib/engine'
+require_relative 'lib/better_bot'
 require 'gosu'
 
 class GUI < Gosu::Window
@@ -6,7 +7,7 @@ class GUI < Gosu::Window
   def initialize
     super(1000, 500, false)
     self.caption = "Battleships"
-    @engine = BattleshipEngine.new(SampleBot, SampleBot)
+    @engine = BattleshipEngine.new(SampleBot, BetterBot)
     engine.start_game
     @font = Gosu::Font.new(self, "courier", 36)
     @count = 0

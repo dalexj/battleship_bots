@@ -22,8 +22,9 @@ class BattleshipEngine
       take_turn
       system("clear")
       print_boards
-      sleep(0.1)
+      sleep(0.5)
     end
+    system("clear")
     puts "Player 1 is the winner" if @map_2.lost?
     puts "Player 2 is the winner" if @map_1.lost?
     print_boards
@@ -34,8 +35,8 @@ class BattleshipEngine
   end
 
   def take_turn
-    one_turn(@bot_1, @map_1)
-    one_turn(@bot_2, @map_2)
+    one_turn(@bot_1, @map_2)
+    one_turn(@bot_2, @map_1)
   end
 
   def print_boards
