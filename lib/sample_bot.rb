@@ -1,4 +1,9 @@
 class SampleBot
+
+  def initialize
+    @count = 0
+  end
+
   def place_ships(map_generator)
     map_generator.place_battleship row: 1, col: 0, direction: :down
     map_generator.place_carrier    row: 0, col: 1, direction: :across
@@ -13,5 +18,8 @@ class SampleBot
       row, col = rand(10), rand(10)
     end
     [row, col]
+    # shot = @count.divmod(10)
+    # @count += 1
+    # shot
   end
 end
