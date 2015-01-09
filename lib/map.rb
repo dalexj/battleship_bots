@@ -45,6 +45,12 @@ class Map
     mark shot, ships_coords.include?(shot.to_coords) ? HIT_MARK : MISS_MARK
   end
 
+  def lost?
+    ships_coords.all? { |row, col| board[row][col] == HIT_MARK }
+  end
+
+  private
+
   def mark_at(shot)
     row, col = shot.to_coords
     board[row][col]
@@ -55,11 +61,6 @@ class Map
     board[row][col] = mark
   end
 
-  def lost?
-    ships_coords.all? { |row, col| board[row][col] == HIT_MARK }
-  end
-
-  private
   def header
     ". " + (1..board_size).to_a.join(" ") + "\n"
   end
