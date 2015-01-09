@@ -1,5 +1,6 @@
 require_relative 'test_helper'
 require './lib/map'
+require './lib/shot'
 
 class MapTest < MiniTest::Test
   attr_reader :map
