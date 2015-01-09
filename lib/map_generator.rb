@@ -21,6 +21,15 @@ class MapGenerator
     @destroyer = attributes
   end
 
+  def valid_placements?
+    begin
+      to_map
+      true
+    rescue
+      false
+    end
+  end
+
   def to_map
     map = Map.new(10)
     map.place_ship(   @carrier.merge( size: 5 ))
