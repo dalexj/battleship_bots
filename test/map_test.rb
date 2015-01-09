@@ -1,5 +1,4 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require_relative 'test_helper'
 require './lib/map'
 
 class MapTest < MiniTest::Test
@@ -22,18 +21,30 @@ class MapTest < MiniTest::Test
       map.place_ship size: 5, row: 4, col: 0, direction: :across
     end
   end
-end
 
-# map = Map.new(10)
-# map.place_ship({size:20, direction: :across, row: 0, col: 0}.merge({size: 4}))
-# map.place_ship(size: 4, direction: :down, row: 5, col: 5)
-# map.place_ship(size: 2, direction: :across, row: 3, col: 6)
-#
-# map.guess_with_string "B4"
-# map.guess_with_string "C7"
-# map.guess_with_string "D7"
-# map.guess_with_string "D8"
-#
-# map.lol
-#
-# puts map
+  def test_marks_spots_where_ships_are
+    map.place_ship size: 5, row: 0, col: 4, direction: :down
+    map.mark_with_ships
+    5.times do |n|
+      assert_equal Map::SHIP_MARK, map.board[n][4]
+    end
+  end
+
+  def test_map_knows_when_game_lost
+    map.place_ship size: 5, row: 0, col: 4, direction: :down
+    5.times do |n|
+      refute map.lost?
+      map.fire! Shot.new [n, 4]
+    end
+    assert map.lost?
+  end
+
+  def test_map_cant_shoot_same_spot_twice
+    [[0, 0], [1, 8], [0, 4]].each do |array|
+      map.fire! Shot.new array
+      assert_raises RuntimeError do
+        map.fire! Shot.new array
+      end
+    end
+  end
+end
